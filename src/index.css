@@ -1,0 +1,14 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default;
+}
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  --color-primary: purple;
+  --color-secondary: teal;
+}
+
+a.active {
+  @apply font-bold text-blue-600;
+}
