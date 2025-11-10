@@ -3,19 +3,24 @@ import AuthContext from "../../AuthProvider/AuthContext";
 import { useEffect } from "react";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { auth } from "../../firebase/firebase.config";
 
 const MyBids = () => {
   const { user } = use(AuthContext);
   const [bids, setBids] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/bids?buyer_email=${user?.email}`)
+    fetch(`http://localhost:3000/bids?buyer_email=${user?.email}`, {
+      headers: {
+        authorization: `bearer ${user?.accessToken}`,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         console.log("my bids data:", data);
         setBids(data);
       });
-  }, [user?.email]);
+  }, [user]);
 
   const handleRemoveBid = (id) => {
     Swal.fire({
@@ -69,7 +74,7 @@ const MyBids = () => {
                 {/* row 1 */}
                 {bids.map((bid, index) => (
                   <>
-                    <tr>
+                    <tr key={index}>
                       <th>{index + 1}</th>
                       <td>
                         <div className="flex items-center gap-3">

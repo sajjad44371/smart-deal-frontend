@@ -1,12 +1,17 @@
 import React from "react";
 import { use } from "react";
 import AuthContext from "../../AuthProvider/AuthContext";
+import { useLocation } from "react-router";
+import { useNavigate } from "react-router";
 
 const Register = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const { signInWithGoogle } = use(AuthContext);
 
   const handleGoogleLogin = () => {
     console.log("Google login clicked");
+
     signInWithGoogle()
       .then((result) => {
         const user = result.user;
@@ -28,6 +33,7 @@ const Register = () => {
           .then((res) => res.json())
           .then((data) => {
             console.log("User saved to database:", data);
+            navigate(location.state?.from?.pathname || "/", { replace: true });
           });
       })
       .catch((error) => {
