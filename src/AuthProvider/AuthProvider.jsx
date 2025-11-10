@@ -41,7 +41,27 @@ const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
+
+      fetch("http://localhost:3000/getToken", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ email: currentUser?.email }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("token response:", data);
+
+          // store token in local storage
+          if (data.accessToken) {
+            localStorage.setItem("accessToken", data.accessToken);
+          } else {
+            localStorage.removeItem("accessToken");
+          }
+        });
     });
+
     return () => {
       unsubscribe();
     };
